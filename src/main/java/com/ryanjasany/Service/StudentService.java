@@ -1,6 +1,8 @@
 package com.ryanjasany.Service;
 
 import com.ryanjasany.Dao.FakeStudentDaoImpl;
+import com.ryanjasany.Dao.MySQLDaoImpl;
+import com.ryanjasany.Dao.StudentDao;
 import com.ryanjasany.Entity.Student;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -12,33 +14,31 @@ import java.util.Collection;
 public class StudentService {
 
     @Autowired
-    @Qualifier("fakeData")
-    private FakeStudentDaoImpl fakeStudentDaoImpl;
+    MySQLDaoImpl mySQLDao;
 
     public Collection<Student> getAllStudents(){
 
-        return this.fakeStudentDaoImpl.getAllStudents();
+        return this.mySQLDao.findAll();
     }
 
     public Student getStudentById(int id){
 
-        return this.fakeStudentDaoImpl.getStudentById(id);
+        return this.mySQLDao.findById(id).orElse(new Student());
     }
 
     public void removeStudentById(int id) {
 
-        this.fakeStudentDaoImpl.removeStudentById(id);
+        this.mySQLDao.deleteById(id);
 
     }
 
     public void updateStudent(Student student){
 
-        this.fakeStudentDaoImpl.updateStudent(student);
+        this.mySQLDao.saveAndFlush(student);
     }
 
     public void insertStudent(Student student) {
 
-        this.fakeStudentDaoImpl.insertStudentToDb(student);
-
+        this.mySQLDao.save(student);
     }
 }
